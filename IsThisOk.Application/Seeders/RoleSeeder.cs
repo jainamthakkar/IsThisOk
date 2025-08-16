@@ -1,55 +1,45 @@
-﻿using IsThisOk.Domain.Entities;
+﻿using IsThisOk.Application.Seeders;
+using IsThisOk.Domain.Entities;
 using MongoDB.Driver;
 
-namespace IsThisOk.Application.Seeders
+public class RoleSeeder : IRoleSeeder
 {
-    public class RoleSeeder : IRoleSeeder
+    private readonly IMongoDatabase _database;
+    private readonly IMongoCollection<RoleMst> _rolesCollection;
+
+    public RoleSeeder(IMongoDatabase database)
     {
-        private readonly IMongoCollection<RoleMst> _roleCollection;
+        _database = database;
+        _rolesCollection = _database.GetCollection<RoleMst>("Roles");
+    }
 
-        public RoleSeeder(IMongoDatabase database)
+    public async Task SeedDefaultRolesAsync()
+    {
+        var existingRoles = await _rolesCollection.Find(_ => true).ToListAsync();
+
+        if (!existingRoles.Any())
         {
-            _roleCollection = database.GetCollection<RoleMst>("RoleMst");
-        }
-
-        public async Task SeedDefaultRolesAsync()
-        {
-            var existingRoles = await _roleCollection.Find(_ => true).ToListAsync();
-            if (existingRoles.Any()) return; // Roles already seeded
-
-            var roles = new List<RoleMst>
+            var defaultRoles = new List<RoleMst>
             {
                 new RoleMst
                 {
                     sRoleName = "User",
-                    sRoleDesc = "Regular user",
+                    sRoleDesc = "Regular anonymous user",
                     bIsActive = true,
-                    dCreatedOn = DateTime.UtcNow
+                    dCreatedOn = DateTime.UtcNow,
+                    dModifiedOn = DateTime.UtcNow
                 },
                 new RoleMst
                 {
                     sRoleName = "Admin",
-                    sRoleDesc = "System administrator",
+                    sRoleDesc = "Platform administrator",
                     bIsActive = true,
-                    dCreatedOn = DateTime.UtcNow
-                },
-                new RoleMst
-                {
-                    sRoleName = "Moderator",
-                    sRoleDesc = "Can moderate posts",
-                    bIsActive = true,
-                    dCreatedOn = DateTime.UtcNow
-                },
-                new RoleMst
-                {
-                    sRoleName = "Anonymous",
-                    sRoleDesc = "Hidden identity poster",
-                    bIsActive = true,
-                    dCreatedOn = DateTime.UtcNow
+                    dCreatedOn = DateTime.UtcNow,
+                    dModifiedOn = DateTime.UtcNow
                 }
             };
 
-            await _roleCollection.InsertManyAsync(roles);
+            await _rolesCollection.InsertManyAsync(defaultRoles);
         }
     }
 }

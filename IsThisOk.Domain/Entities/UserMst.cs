@@ -9,16 +9,20 @@ namespace IsThisOk.Domain.Entities
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
-        public string sUsername { get; set; }
+        public string sUsername { get; set; }// Real username (private)
 
-        public string sEmail { get; set; }
+        public string sEmail { get; set; }// Real email (private)
 
         public string sPasswordHash { get; set; }
 
         [BsonRepresentation(BsonType.ObjectId)]
         public string iRoleId { get; set; }
 
-        public bool IsAnonymous { get; set; }
+
+        // This is what others see: "Anonymous_Fox_123"
+        public string sAnonymousDisplayName { get; set; }
+
+        public bool bIsActive { get; set; } = true;
 
         public DateTime dCreatedAt { get; set; } = DateTime.UtcNow;
 

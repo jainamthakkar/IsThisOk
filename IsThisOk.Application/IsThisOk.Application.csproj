@@ -5,6 +5,12 @@
     <ProjectReference Include="..\IsThisOk.DatabaseOperation\IsThisOk.DatabaseOperation.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+	  <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
+	  <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.0.0" />
+	  <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
