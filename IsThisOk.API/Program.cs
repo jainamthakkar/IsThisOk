@@ -38,6 +38,7 @@ builder.Services.AddSingleton<IMongoDatabase>(sp =>
 //  Authentication Services
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAuthorizationHelper, AuthorizationHelper>();
 
 // JWT Authentication
 var jwtSettings = builder.Configuration.GetSection(nameof(JwtSettings)).Get<JwtSettings>();
@@ -56,6 +57,29 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ClockSkew = TimeSpan.Zero
         };
     });
+
+// Add Authorization Policies
+builder.Services.AddAuthorization(options =>
+{
+    // Policy for regular users (anyone logged in)
+    options.AddPolicy("UserPolicy", policy =>
+        policy.RequireAuthenticatedUser()
+              .RequireRole("User", "Admin")); // Both User and Admin can do user actions
+
+    // Admins and SuperAdmin  
+    options.AddPolicy("AdminPolicy", policy =>
+        policy.RequireAuthenticatedUser()
+              .RequireRole("Admin", "SuperAdmin"));
+
+    // Policy for post owners (we'll check this manually)
+    options.AddPolicy("PostOwnerPolicy", policy =>
+        policy.RequireAuthenticatedUser());
+
+    // Only SuperAdmin
+    options.AddPolicy("SuperAdminPolicy", policy =>
+        policy.RequireAuthenticatedUser()
+              .RequireRole("SuperAdmin"));
+});
 
 builder.Services.AddSingleton<IRoleSeeder, RoleSeeder>();
 

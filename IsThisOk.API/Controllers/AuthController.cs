@@ -23,7 +23,7 @@ namespace IsThisOkay.API.Controllers
         {
             try
             {
-                // 🔍 Basic validation
+                // Basic validation
                 if (string.IsNullOrWhiteSpace(request.Email) ||
                     string.IsNullOrWhiteSpace(request.Password))
                 {
@@ -40,7 +40,7 @@ namespace IsThisOkay.API.Controllers
                     return BadRequest(new { message = "Invalid email format" });
                 }
 
-                // 🚀 Call UserService to create account
+                // Call UserService to create account
                 var result = await _userService.SignUpAsync(request);
 
                 if (result.Success)
@@ -107,7 +107,7 @@ namespace IsThisOkay.API.Controllers
             }
         }
 
-        // 🔍 Helper method to validate email format
+        // Helper method to validate email format
         private bool IsValidEmail(string email)
         {
             try

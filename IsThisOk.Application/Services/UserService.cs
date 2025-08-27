@@ -15,8 +15,8 @@ namespace IsThisOk.Application.Services
         public UserService(IMongoDatabase database, ITokenService tokenService)
         {
             _database = database;
-            _usersCollection = _database.GetCollection<UserMst>("Users");
-            _rolesCollection = _database.GetCollection<RoleMst>("Roles");
+            _usersCollection = _database.GetCollection<UserMst>("UserMst");
+            _rolesCollection = _database.GetCollection<RoleMst>("RoleMst");
             _tokenService = tokenService;
         }
 
